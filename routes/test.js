@@ -6,7 +6,8 @@ var router = express.Router();
 
 /* GET users listing. */
 router.get('/test', function(req, res, next) {
-
+    var hostName = req.headers.host;
+    console.log(hostName);
     res.render('success');
 });
 router.get('/send', function(req, res, next) {
