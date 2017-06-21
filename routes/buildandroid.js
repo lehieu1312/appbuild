@@ -341,21 +341,21 @@ router.post('/build-android', multipartMiddleware, function(req, res, next) {
                     return sendMail('hieu.ric@gmail.com', linkdebug, linksigned, sess.appName)
                 })
                 .then(function() {
-                    let customer = new Customer();
-                    customer.email = mailCustomer;
-                    customer.appname.app = sess.appName;
-                    customer.appname.plaforms = 'android';
-                    customer.linkdebug = sess.linkdebug;
-                    customer.linksigned = sess.linksigned;
-                    customer.datecreate = Date.now();
-                    customer.save(function(err) {
-                        if (err) {
-                            console.log(err);
-                            return;
-                        } else {
-                            console.log('save success');
-                        }
-                    });
+                    // let customer = new Customer();
+                    // customer.email = mailCustomer;
+                    // customer.appname.app = sess.appName;
+                    // customer.appname.plaforms = 'android';
+                    // customer.appname.linkdebug = sess.linkdebug;
+                    // customer.appname.linksigned = sess.linksigned;
+                    // customer.appname.datecreate = Date.now();
+                    // customer.save(function(err) {
+                    //     if (err) {
+                    //         console.log(err);
+                    //         return;
+                    //     } else {
+                    //         console.log('save success');
+                    //     }
+                    // });
                     var opts = {
                         errorCorrectionLevel: 'H',
                         type: 'image/png',

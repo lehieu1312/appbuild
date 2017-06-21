@@ -65,7 +65,7 @@ router.post('/upload', multipartMiddleware, function(req, res, next) {
                                         // fse.removeSync(path.join(path_Temporary, app_Name));
                                         // fs.unlinkSync(path.join(path_FileUploads));
                                         res.render('info-build', { errors: req.session.errors });
-                                        next();
+
                                     }
                                 }
                             })
