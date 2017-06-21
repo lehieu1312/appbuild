@@ -1,15 +1,41 @@
 var express = require('express');
 var path = require('path');
+var fs = require('fs');
 var nodemailer = require('nodemailer');
 var hbs = require('nodemailer-express-handlebars');
 var router = express.Router();
-
+var qr = require('qr-image');
+var QRCode = require('qrcode');
 /* GET users listing. */
 router.get('/test', function(req, res, next) {
     var hostName = req.headers.host;
     console.log(hostName);
     res.render('success');
 });
+router.get('/qrcode', function(req, res) {
+    var code = qr.image('localhost:3005\static\debug\9f3fec4d9fcaeec15238174e88dd6ac4\zingapp-debug.apk', { type: 'png', ec_level: 'H', size: 20, margin: 0 });
+    // res.setHeader('Content-type', 'image/png');
+    code.pipe(fs.createWriteStream('./public/qr.png'));
+    //code.pipe(res);
+    res.render('success', { qr: code })
+});
+router.get('/qr', function(req, res) {
+    var opts = {
+        errorCorrectionLevel: 'H',
+        type: 'image/png',
+        rendererOpts: {
+            quality: 0.5
+        }
+    }
+
+    QRCode.toDataURL('localhost:3005\static\debug\9f3fec4d9fcaeec15238174e88dd6ac4\zingapp-debug.apk', opts, function(err, url) {
+        if (err) throw err
+        console.log(url)
+            //var img = document.getElementById('image');
+            //img.src = url;
+        res.render('success', { qrcode: url });
+    })
+})
 router.get('/send', function(req, res, next) {
     var transporter = nodemailer.createTransport({ // config mail server
         host: 'smtp.gmail.com',

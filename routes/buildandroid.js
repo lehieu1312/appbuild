@@ -8,16 +8,19 @@ var Q = require('q'),
     fs = require('fs'),
     spawn = require('child_process').spawn,
     nodemailer = require('nodemailer'),
+    crossSpawn = require('cross-spawn'),
     multipart = require('connect-multiparty');
+var hbs = require('nodemailer-express-handlebars');
+var QRCode = require('qrcode');
 var appRoot = require('app-root-path');
 appRoot = appRoot.toString();
 var multipartMiddleware = multipart();
 let Customer = require('../models/customer');
-var check = true;
+var checked = true;
 router.post('/build-android', multipartMiddleware, function(req, res, next) {
-
-    if (check) {
-        check = false;
+    console.log(checked);
+    if (checked) {
+        checked = false;
         req.check('email', 'Email is required').notEmpty();
         req.check('email', 'Invalid is email adress').isEmail();
         req.check('keystore', 'Keystore is required').notEmpty();
@@ -52,16 +55,7 @@ router.post('/build-android', multipartMiddleware, function(req, res, next) {
                 keystore_again = req.body.confirmKeystore,
                 alias = req.body.alias;
 
-            let customer = new Customer();
-            customer.email = mailCustomer;
-            customer.appname.appName = sess.appName;
-            customer.appname.plaforms = 'android';
-            customer.save(function(err) {
-                if (err) {
-                    console.log(err);
-                    return;
-                }
-            });
+
             let unZip = (inFile, outFile) => {
                 return new Promise((resolve, reject) => {
                     extract(inFile, { dir: outFile }, function(err, data) {
@@ -96,6 +90,8 @@ router.post('/build-android', multipartMiddleware, function(req, res, next) {
                     try {
                         if (fse.existsSync(path.join(appRoot, 'public', 'project', 'myapp'))) {
                             fse.removeSync(path.join(appRoot, 'public', 'project', 'myapp'));
+                            fse.copySync(path.join(appRoot, 'public', 'appxample', 'myapp'), path.join(appRoot, 'public', 'project', 'myapp'));
+                            fse.renameSync(path.join(appRoot, 'public', 'project', 'myapp'), path.join(appRoot, 'public', 'project', folderApp));
                         } else {
                             fse.copySync(path.join(appRoot, 'public', 'appxample', 'myapp'), path.join(appRoot, 'public', 'project', 'myapp'));
                             fse.renameSync(path.join(appRoot, 'public', 'project', 'myapp'), path.join(appRoot, 'public', 'project', folderApp));
@@ -211,49 +207,74 @@ router.post('/build-android', multipartMiddleware, function(req, res, next) {
             }
             let sendMail = (emailReceive, linkAppUnsign, linkAppSigned, App) => {
                 return new Promise((resolve, reject) => {
-                    let transporter = nodemailer.createTransport({
+                    var transporter = nodemailer.createTransport({ // config mail server
                         host: 'smtp.gmail.com',
-                        port: 587,
-                        secure: false, // secure:true for port 465, secure:false for port 587
                         auth: {
                             user: 'lehieu.ggplay@gmail.com',
                             pass: '1312199421'
                         }
                     });
-                    var htmlContent = `<h1>Taydotech Team ✔</h1>
-                    <p>Thanks you used Taydotech server</p>
-                    <p>We send you file build app ` + App + ` </p>
-                    link file debug: ` + linkAppUnsign + `,<br/>
-                    link file signed: ` + linkAppSigned + `.<br/>
-                    Thanks you!
-                    `;
-                    let mailOptions = {
-                        from: '"Taydotech Team" <foo@blurdybloop.com>', // sender address
-                        to: emailReceive, // list of receivers
-                        subject: 'File build app ' + App + '✔', // Subject line
-                        text: 'Hi ' + emailReceive + '!', // plain text body    
-                        html: htmlContent // html body
-                    };
+                    transporter.use('compile', hbs({
+                        viewPath: path.join(appRoot, 'views'),
+                        extName: '.ejs'
+                    }));
 
-                    // send mail with defined transport object
-                    transporter.sendMail(mailOptions, (error, info) => {
-                        if (error) {
-                            return reject(error);
+                    var mainOptions = { // thiết lập đối tượng, nội dung gửi mail
+                        from: 'TayDoTech Team',
+                        to: emailReceive,
+                        subject: 'Check file application',
+                        template: 'mail',
+                        context: {
+                            App,
+                            linkAppUnsign,
+                            linkAppSigned
                         }
-                        resolve('Message %s sent: %s', info.messageId, info.response);
+                    }
+                    transporter.sendMail(mainOptions, function(err, info) {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve('Message sent: ' + info.response);
+                        }
                     });
                 });
             }
+            let commandCordova = (optionList) => {
+                    var deferred = Q.defer();
+                    var cordovaProcess = crossSpawn.spawn('cordova', optionList);
+                    cordovaProcess.on('data', function(data) {
+                        if (data instanceof Error) {
+                            //console.log(chalk.bold(data.toString()));
+                            console.log('error cordova: ' + data.toString());
+                            checked = true;
+                            // res.render('upload', { errors: data.toString() });
+                        }
+                        //console.log('data: ' + data.toString());
+                    });
+                    cordovaProcess.stderr.on('data', function(data) {
+                        if (data instanceof Error) {
+                            //console.log(chalk.bold(data.toString()));
+                            checked = true;
+                            console.log('error cordova: ' + data.toString());
+                            //res.render('upload', { errors: data.toString() });
+                        }
+                    });
 
+                    cordovaProcess.on('close', function(code) {
+                        if (code > 0) {
+                            return deferred.reject(code);
+                        }
+                        return deferred.resolve();
+                    });
 
-
-
-            // .then(function() {
-            //     return configHooks();
-            // })
-            // var argvIonicstart = ['start', app_Name];
-            //taydoCommandUtils.execIonicCommand(argvIonicstart)
-            // process.chdir(path_project);
+                    return deferred.promise;
+                }
+                // .then(function() {
+                //     return configHooks();
+                // })
+                // var argvIonicstart = ['start', app_Name];
+                //taydoCommandUtils.execIonicCommand(argvIonicstart)
+                // process.chdir(path_project);
 
             process.chdir(path.join(appRoot, 'public', 'project'));
             // var argvIonicstart = ['start', sess.folderAppMd5, 'blank'];
@@ -274,22 +295,29 @@ router.post('/build-android', multipartMiddleware, function(req, res, next) {
                     console.log(process.cwd());
                     var argv = ['platform', 'add', 'android'];
                     return taydoCommandUtils.execCordovaCommand(argv);
+                    //  return commandCordova(argv)
                 })
                 .then(function() {
                     console.log('build project debug........');
                     process.chdir(path.join(appRoot, 'public', 'project', sess.folderAppMd5));
                     var argv = ['build', 'android'];
                     return taydoCommandUtils.execCordovaCommand(argv);
+                    // return commandCordova(argv)
                 })
                 .then(function() {
-                    console.log('copy  file apk unsign........');
-                    return copyFileApkDebug(path.join(appRoot, 'public', 'project', sess.folderAppMd5));
+                    try {
+                        console.log('copy  file apk unsign........');
+                        return copyFileApkDebug(path.join(appRoot, 'public', 'project', sess.folderAppMd5));
+                    } catch (error) {
+                        res.render('upload', { errors: 'Error generate file unsign,please try again.' });
+                    }
                 })
                 .then(function() {
                     console.log('build project release.....');
                     process.chdir(path.join(appRoot, 'public', 'project', sess.folderAppMd5));
                     var argv = ['build', 'android', '--release'];
                     return taydoCommandUtils.execCordovaCommand(argv);
+                    // return commandCordova(argv)
                 })
                 .then(function() {
                     console.log('copy  file apk sign....');
@@ -304,26 +332,57 @@ router.post('/build-android', multipartMiddleware, function(req, res, next) {
                     console.log('zip file....');
                     return zipAlignApp(path.join(appRoot, 'public', 'project', sess.folderAppMd5), sess.appName);
                 })
-                // .then(function() {
-                //     var hostName = req.headers.host;
-                //     var linkunsigned = path.join(hostName, 'static', 'debug', sess.folderAppMd5, sess.appName + '-debug.apk');
-                //     var linksinged = path.join(hostName, 'static', 'signed', sess.folderAppMd5, sess.Name + '.apk');
-                //     return sendMail('hieu.ric@gmail.com', linkunsigned, linksinged, sess.appName)
-                // })
                 .then(function() {
-                    return res.render('success');
-
+                    var hostName = req.headers.host;
+                    var linkdebug = path.join(hostName, 'static', 'debug', sess.folderAppMd5, sess.appName + '-debug.apk');
+                    var linksigned = path.join(hostName, 'static', 'signed', sess.folderAppMd5, sess.appName + '.apk');
+                    sess.linkdebug = linkdebug;
+                    sess.linksigned = linksigned;
+                    return sendMail('hieu.ric@gmail.com', linkdebug, linksigned, sess.appName)
+                })
+                .then(function() {
+                    let customer = new Customer();
+                    customer.email = mailCustomer;
+                    customer.appname.app = sess.appName;
+                    customer.appname.plaforms = 'android';
+                    customer.linkdebug = sess.linkdebug;
+                    customer.linksigned = sess.linksigned;
+                    customer.datecreate = Date.now();
+                    customer.save(function(err) {
+                        if (err) {
+                            console.log(err);
+                            return;
+                        } else {
+                            console.log('save success');
+                        }
+                    });
+                    var opts = {
+                        errorCorrectionLevel: 'H',
+                        type: 'image/png',
+                        rendererOpts: {
+                            quality: 0.5
+                        }
+                    }
+                    QRCode.toDataURL(sess.linkdebug, opts, function(err, url) {
+                            if (err) throw err
+                            checked = true;
+                            return res.render('success', { qrcode: url });
+                        })
+                        // return res.render('success');
                 })
                 .catch(function(ex) {
                     if (ex instanceof Error) {
-                        console.log(ex);
+                        checked = true;
+                        //  if (fs.existsSync(path.join(appRoot, 'public', 'project', sess.folderAppMd5))) fs.unlink(path.join(appRoot, 'public', 'project', sess.folderAppMd5))
+                        res.render('upload', { errors: 'Error build(' + ex + '' + '),please try again.' });
                     }
                 });
-
-
-
         }
     }
+    // else {
+    //     //checked = true;
+    //     res.render('upload', { errors: 'Build fail,please try again' });
+    // }
 });
 
 module.exports = router;

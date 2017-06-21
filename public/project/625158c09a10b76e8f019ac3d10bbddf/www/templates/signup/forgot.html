@@ -1,0 +1,23 @@
+<ion-view class="login" hide-Footers1>
+    <link rel="stylesheet" type="text/css" href="css/login.css">
+    <ion-header-bar class="no-backgroud"><button class="button button-clear icon-back button-light" ng-click="comeBack()"></button>
+</ion-header-bar>
+    <ion-content scroll="false">
+        <div class="main-login" style="margin-top: 40%;">
+            <div id="logo" class="logo auto-margin" ui-sref="app.tabs">
+                <img src="img/logo.png">
+            </div>
+            <div class="form-login margin-t20">
+                <form name="forgot">
+                    <label class="item item-input">
+                        <i class="icon-login margin-r10 padding-r10"></i>
+                        <input type="email" name="email" placeholder="{{'email'|translate}}" ng-model="forGot.email" required>
+                        <img class="img-erorr" src="img/erorr.png" ng-show="forgot.email.$touched && forgot.email.$invalid"></img>
+                    </label>
+                    <button class="button button-block button-login" ng-disabled="!forgot.$dirty||forgot.$invalid" ng-click="resetPass()">{{'resetPassword'|translate}}</button>
+                </form>
+            </div>
+        </div>
+    </ion-content>
+        <p class="white align-center absolute term"  ui-sref="app.term">{{'term'|translate}}</p>
+</ion-view>

@@ -78,9 +78,9 @@ router.post('/upload', multipartMiddleware, function(req, res, next) {
             console.log('format file must zip type');
             var errors = 'format file must zip type';
             res.render('upload', { errors: errors });
-            next();;
+            next();
         }
-    } catch (ex) { console.log('Error upload: ' + ex); }
+    } catch (ex) { res.render('upload', { errors: ex }); }
 });
 
 

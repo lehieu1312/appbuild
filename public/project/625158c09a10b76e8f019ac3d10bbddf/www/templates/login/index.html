@@ -1,0 +1,36 @@
+<ion-view class="login" hide-Footers>
+<ion-header-bar class="no-backgroud"><button class="button button-clear icon-back button-light" ng-click="comeBack()"></button>
+</ion-header-bar>
+<link rel="stylesheet" type="text/css" href="css/login.css">
+	<ion-content scroll="false">
+		<div class="main-login margin-t20">
+			<div id="logo" class="logo auto-margin" ui-sref="app.tabs">
+				<img src="img/logo.png">
+			</div>
+			<div class="form-login margin-t20">
+				<form name="login">
+					<label class="item item-input">
+					<i class="icon-profile margin-r10 padding-r10"></i>
+					<input type="text" name="username" placeholder="{{'username'|translate}}" ng-model="user.username" required>
+					</label>
+					<label class="item item-input margin-t10">
+					<i class="icon-lock margin-r10 padding-r10"></i>
+					<input type="password" name="password" placeholder="{{'password'|translate}}" ng-model="user.password" required>
+					<img class="img-erorr" src="img/erorr.png" ng-show="login.password.$touched && login.password.$invalid"></img>
+					</label>
+					<button class="button button-block button-login" ng-disabled="!login.$dirty||login.$invalid" ng-click="logIn()">{{'signIn'|translate}}</button>
+				</form>
+<!-- 				<p class="margin-t20 align-center">Or</p>
+				<div class="other-login margin-t20">
+					<button class="button button-block button-facebook">FACEBOOK</button>
+					<button class="button button-block button-google">GOOGLE+</button>
+				</div> -->
+			</div>
+		</div>
+		
+	</ion-content>
+	<div class="align-center absolute" id="forgot">
+		<span class="white" id="forgot-pass" ui-sref="app.forgot">{{'forgotPassword'|translate}}</span>
+		<span class="white" id="sign-up" ui-sref="app.signup" style="margin-left: 30%">{{'signup'|translate}}</span>
+		</div>
+</ion-view>

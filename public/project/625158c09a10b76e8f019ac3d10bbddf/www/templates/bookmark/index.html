@@ -1,0 +1,36 @@
+<ion-view>
+    <link rel="stylesheet" type="text/css" href="css/bookmark.css">
+    <ion-header-bar class="bar bar-light">
+        <h3 class="title1">{{'BOOKMARKS'|translate}}</h3>
+    </ion-header-bar>
+    <ion-tabs class="my-tab" delegate-handle="tab-bookmark" ng-controller="bookMarkCtrl">
+        <!-- latest Tab -->
+        <!-- feature Tab -->
+        <ion-tab title="{{'NEWS'|translate}}" on-select="getIndexTab()">
+            <ion-pane>
+<!--                 <button class=" button  bar-pink clear-all" ng-if="checkNews" ng-click="clearAll()">Clear All</button>
+ -->                <ion-content class="content-bookmark">
+                    <div ng-include="'templates/bookmark/tab-new.html'" ng-controller="bookMarkCtrl"></div>
+                </ion-content>
+            </ion-pane>
+        </ion-tab>
+        <!-- photo Tab -->
+        <ion-tab title="{{'PHOTOS'|translate}}" on-select="getIndexTab()">
+            <ion-pane>
+<!--                 <button class=" button  bar-pink clear-all" ng-if="checkImage" ng-click="clearAll()">Clear All</button>
+ -->                <ion-content class="content-bookmark">
+                    <div ng-include="'templates/bookmark/tab-photo.html'" ng-controller="bookMarkCtrl"></div>
+                </ion-content>
+            </ion-pane>
+        </ion-tab>
+        <ion-tab title="{{'VIDEO'|translate}}" on-select="getIndexTab()">
+            <ion-pane>
+<!--                 <button class=" button  bar-pink clear-all" ng-if="checkVideo" ng-click="clearAll()">Clear All</button>
+ -->                <ion-content class="content-bookmark">
+                    <div ng-include="'templates/bookmark/tab-video.html'" ng-controller="bookMarkCtrl"></div>
+                </ion-content>
+            </ion-pane>
+        </ion-tab>
+        <!-- video Tab -->
+    </ion-tabs>
+</ion-view>

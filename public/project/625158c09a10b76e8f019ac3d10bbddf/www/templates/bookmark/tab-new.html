@@ -1,0 +1,20 @@
+<div class="padding has-tabs-top bookmark-news has-footer margin-b10">
+    <div class="post-thumnail over-flow margin-t10 border-b " ng-repeat="x in data | limitTo:limitNews" ng-if="x.format=='standard'">
+        <div class="thumbnail float-l col-41">
+            <a ng-href="#app/details/{{x.id}}"><img ng-src={{x.mobiconnector_feature_image.mobiconnector_large||'img/no_images.png'}}></a>
+        </div>
+        <div class="title-thumbnail float-l col-61 padding-thumbnail">
+            <a ng-href="#app/details/{{x.id}}">
+                <p ng-bind-html="x.title.rendered">
+                </p>
+            </a>
+            <p class="info-post padding-t10 gray relative"><span class="padding-r10">{{x.mobiconnector_total_comments.all}}<i class="icon-comment"></i></span><span>{{x.mobiconnector_total_views}}<i class="icon-eyes"></i></span>
+                <button class="button button-clear icon-delete button-dark news-delete absolute " ng-click="deleteNews(x.id)"></button>
+            </p>
+        </div>
+    </div>
+    <button class=" button  bar-pink clear-all" ng-if="checkNews" ng-click="clearAll()">{{'clearAll'|translate}}</button>
+
+    <ion-infinite-scroll ng-if="limitNews<bookNews.length" on-infinite="loadMore()">
+    </ion-infinite-scroll>
+</div>

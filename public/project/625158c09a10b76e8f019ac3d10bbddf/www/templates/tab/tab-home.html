@@ -1,0 +1,120 @@
+<div ng-if="show">
+<div class="top over-flow white-d " ng-if="dataCategory">
+    <div class="post-thumnail border-b top-slide" ng-if="topSlide.length !=0">
+        <ion-slide-box delegate-handle="image-viewer1"  >
+            <ion-slide ng-repeat="x in topSlide" >
+             <a ng-href="#app/details/{{x.id}}"><img ng-src={{x.mobiconnector_feature_image.mobiconnector_large||'img/no_images.png'}}></a>
+                <div class="absolute caption-slide" >
+                    <div class="caption"  ng-show="topSlide.length !=0">
+                        <p class="padding-5" ng-bind-html="x.title.rendered"></p>
+                    </div>
+                </div>
+            </ion-slide>
+          
+        </ion-slide-box>
+    </div>
+    <!-- //////////////////////////////////Post-Standard////////////////////////////////// -->
+    <div class="post-thumnail over-flow margin-t10 border-b" ng-repeat="x in topLatest" ng-if="x.format=='standard'">
+        <div class="thumbnail float-l col-41 relative" >
+            <a ng-href="#app/details/{{x.id}}">
+                <img ng-src={{x.mobiconnector_feature_image.mobiconnector_large||'img/no_images.png'}}></a>
+           <!--  <a ng-href="#app/slidebox/{{x.id}}" ng-if="x.format=='image'||x.format=='gallery'">
+                <img ng-src={{x.mobiconnector_feature_image.mobiconnector_large||'img/no_images.png'}}></a> -->
+            <div class="play absolute" ng-if="x.format=='image'|| x.format=='gallery'"><i class="icon-gallery1 absolute"></i></div>
+            <div class="absolute play" ng-if="x.format=='video'"><i class="icon-play absolute"></i></div>
+        </div>
+      
+        <div class="title-thumbnail float-l col-61 padding-thumbnail">
+            <a ng-href="#app/details/{{x.id}}" ng-if="x.format=='standard'">
+                <p ng-bind-html="x.title.rendered"> </p>
+            </a>
+            <!-- <a ng-href="#app/slidebox/{{x.id}}" ng-if="x.format=='image'||x.format=='gallery'">
+                <p ng-bind-html="x.title.rendered"> </p>
+            </a> -->
+            <p class="info-post padding-t10 gray"><span class="padding-r10">{{x.mobiconnector_total_comments.all}}<i class="icon-comment"></i></span><span>{{x.mobiconnector_total_views}}<i class="icon-eyes"></i></span></p>
+        </div>
+    </div>
+    <div class="see-more" ng-click="loadMore()" ng-if="checkMore">
+        <p>{{'seeMore'|translate}}</p>
+    </div>
+</div>
+<!-- ////////////////////// Category //////////////////////-->
+<div class="home-category white-d over-flow margin-t10">
+    <div class="head-category relative">
+        <h4 class="padding-10 pink relative" ng-click="goCate()">Categories<i class="icon-more" style="margin:0"></i></h4>
+    </div>
+    <div class="more-view">
+        <i></i>
+    </div>
+    <div class="home-category-item">
+        <ion-scroll direction="x">
+                <div class="row row-center row-no-padding" style="width:{{categoryWidth}}px">
+                    <div class="float-l col-32 padding-r5 relative" ng-repeat="x in dataCategory">
+                        <a ng-href="#app/detailsCategory/{{x.id}}"><img ng-src={{x.mobiconnector_avatar}} ng-if="x.mobiconnector_avatar!=null"></a>
+                        <a ng-href="#app/detailsCategory/{{x.id}}"><img ng-src="img/no_images1.png" ng-if="x.mobiconnector_avatar==null"></a>
+                        <div class="name-category-slide absolute">
+                            <p class=" align-center" ng-bind-html="x.name"></p>
+                        </div>
+                    </div>
+                </div>
+        </ion-scroll>
+    </div>
+</div>
+<!--///////////////////////////// Video////////////////////// -->
+<div class="video margin-t10 white-d over-flow">
+    <div class="head-video" ng-click="goTab(3)">
+        <h4 class="padding-5 pink">Video<i class="icon-video1 padding-l5"></i></h4>
+    </div>
+    <div class="video-item col-50 float-l padding-2" ng-repeat="x in latestVideo">
+        <div class="thumbnail-video  relative" ng-if="x.mobiconnector_feature_image!=null">
+            <a ng-href="#app/details/{{x.id}}"><img ng-src={{x.mobiconnector_feature_image.mobiconnector_large}}></a>
+            <div class="play1 absolute"><i class="icon-play absolute"></i></div>
+        </div>
+        <div class="thumbnail-video  relative" ng-if="x.mobiconnector_feature_image==null">
+            <a ng-href="#app/details/{{x.id}}"><img ng-src="img/no_images.png"></a>
+            <div class="play1 absolute"><i class="icon-play absolute"></i></div>
+        </div>
+        <div class="title-thumbnail padding-5">
+            <a ng-href="#app/details/{{x.id}}">
+                <p ng-bind-html="x.title.rendered | limitTo:50"></p>
+            </a>
+        </div>
+        <div class="info-post">
+            <p class="gray padding-l5"><span class="padding-r10">{{x.mobiconnector_total_comments.all}}<i class="icon-comment"></i></span><span>{{x.mobiconnector_total_views}}<i class="icon-eyes"></i></span></p>
+        </div>
+    </div>
+</div>
+ <div class="see-more" ng-click="loadMoreVideo()" ng-show="checkMoreVideo">
+        <p>{{'seeMore'|translate}}</p>
+    </div>
+<!-- ////////////////////////Photo/////////////////////// -->
+<div class="photo margin-t10 over-flow white-d margin-b10">
+    <div class="head-photo" ng-click="goTab(2)">
+        <h4 class="pink padding-5">Photo<i class="icon-camera padding-l5"></i></h4></div>
+    <div class="photo-item" ng-class="{toppost:$first}" ng-repeat="x in latestImage">
+        <div class="post-thumnail over-flow margin-t10 border-b">
+            <div class="thumbnail float-l col-41 relative">
+                <a ng-href="#app/slidebox/{{x.id}}"><img ng-src={{x.mobiconnector_feature_image.mobiconnector_large||'img/no_images.png'}}></a>
+                <div class="play2 absolute" ng-if="$first"><i class="icon-gallery absolute"></i></div>
+                <div class="play absolute" ng-if="!$first"><i class="icon-gallery1 absolute"></i></div>
+            </div>
+          <!--   <div class="thumbnail float-l col-41 relative" ng-if="x.mobiconnector_feature_image==null">
+                <a ng-href="#app/slidebox/{{x.id}}"><img src="img/no_images.png"></a>
+                <div class="play2 absolute"></div>
+            </div> -->
+            <div class="title-thumbnail float-l col-61 padding-thumbnail">
+                <a ng-href="#app/slidebox/{{x.id}}">
+                    <p ng-bind-html="x.title.rendered">
+                    </p>
+                </a>
+                <p class="info-post padding-t10 gray"><span class="padding-r10">{{x.mobiconnector_total_comments.all}}<i class="icon-comment"></i></span><span>{{x.mobiconnector_total_views}}<i class="icon-eyes"></i></span></p>
+            </div>
+        </div>
+    </div>
+    <div class="see-more" ng-click="loadMoreImage()" ng-show="checkMoreImage">
+        <p>{{'seeMore'|translate}}</p>
+    </div>
+</div>
+</div>
+<!--  <ion-infinite-scroll ng-if="checkLoad" on-infinite="loadMore()">
+</ion-infinite-scroll> -->

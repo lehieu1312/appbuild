@@ -1,0 +1,49 @@
+
+<ion-view>
+<link rel="stylesheet" type="text/css" href="css/comment.css">
+	<ion-header-bar class="bar-pink">
+		<button class="button button-clear icon-back button-light" ng-click="comeBack()"></button>
+		<h3 class="title white" ng-if="data">{{'comments'|translate}} {{dataLength}}</h3>
+	</ion-header-bar>
+	<ion-content class="padding has-footer has-subfooter">
+		<div class="margin-t20 over-flow border-b" ng-repeat="x in data">
+			<div class="comment-item">
+				<div class="col-20 float-l padding-10">
+					<img ng-src={{x.mobiconnector_local_avatar||'img/no_images.png'}}>
+				</div>
+			</div>
+			<div class="float-l col-80 padding-10">
+				<h4 class="user-c pink">{{x.author_name}}</h4>
+				<p class="margin-t10" ng-bind-html="x.content.rendered"></p>
+				<p class="margin-t10"><span class="gray">{{x.date|dateToString}}</span></p>
+			</div>
+		</div>
+	</ion-content>
+	<div class="bar bar-subfooter my-footer my-border bar-comment"  keyboard-attach>
+		<button class="button button-clear button-dark icon-camera"></button>
+		<input type="text" name="" placeholder="{{'enterYourComment'|translate}}" ng-model="dataComment">
+		<button class="button button-clear button-dark ion-android-send padding-10" ng-click="send()"></button>
+
+	</div>
+	 <ion-footer-bar class="my-footer">
+        <div class="col-19" ui-sref="app.tabs">
+            <i class="icon-home"></i>
+            <span>{{'home'|translate}}</span>
+        </div>
+        <div class="col-19 margin-l10" ui-sref="app.category">
+            <i class="icon-category"></i>
+            <span>{{'category'|translate}}</span>
+        </div>
+        <div class="col-19 margin-l10" ui-sref="app.search">
+            <i class="icon-search"></i>
+            <span>{{'search'|translate}}</span>
+        </div>
+        <div class="col-19 margin-l10" ui-sref="app.bookmark">
+            <i class="icon-bookmarks"></i>
+            <span>{{'bookmarks'|translate}}</span>
+        </div>
+        <div class="col-19 margin-l10" menu-toggle="left">
+            <i class="icon-setting"></i>
+            <span>{{'setting'|translate}}</span>
+    </ion-footer-bar>
+</ion-view>

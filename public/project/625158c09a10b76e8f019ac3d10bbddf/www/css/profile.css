@@ -1,0 +1,61 @@
+.top-profile {
+    width: 100%;
+    height: 40%;
+    background: #ff0099;
+}
+
+.avata {
+    width: 33%;
+    margin-left: 33%;
+}
+
+.avata img {
+    border: 4px solid #fff;
+    border-radius: 100%;
+	background:#c5cede
+}
+.name-user{
+	font-size: 150%;
+	margin-bottom:10px
+}
+.user-comment{
+    width: 50%;
+    height: 25%;
+    bottom: 0px;
+    left: 0px;
+    background: #ea058f;
+    color: white;
+}.user-bookmark{
+	width: 50%;
+	height: 25%;
+	bottom: 0px;
+	right: 0px;
+    background: #d60a85;
+    color: white;
+}
+.bottom-profile {
+     width: 100%;
+}
+.form-info{
+    width: 80%;
+    margin-left: 10%;
+}
+.form-info input{
+    border-bottom: 1px solid #ecebeb !important;
+    padding-left: 0px !important;
+    width: 100%;
+}
+.form-info p{
+    font-size: 10px;
+}
+.button-save{
+    background: #ff0099;
+    color: #fff;
+}
+.bottom-profile img{
+    width: 10%;
+    height: 90%;
+}
+.bottom-profile label{
+    padding-left: 0px;
+}

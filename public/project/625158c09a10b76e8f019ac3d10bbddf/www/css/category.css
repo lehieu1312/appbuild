@@ -1,0 +1,53 @@
+
+.img-category img{
+	width: 100%;
+	height: 200px;
+}
+.name-category{
+	top: 0px;
+	left: 0px;
+	color: #ffffff;
+	background: #ed2a7a;
+	height: auto;
+	padding: 5px;
+}
+.cate{
+	width:20px;
+	height: 100%;
+	top: 0px;
+	left: 100%;
+}
+.child-cate{
+	display: flex;
+}
+.my-scroll{
+	height: 100%;
+}
+.my-scroll .scroll{
+	white-space:nowrap;
+}
+.my-scroll .scroll > *{
+	line-height:43px;
+	padding:13px 10px;
+}
+.my-scroll a:hover{
+	font-weight: bold;
+}
+ion-scroll{
+	width:500px;
+	height: 40px;
+
+}
+/*ion-scroll[direction=x] {
+  width: 100vw;
+}*/
+/*#tri {
+  border-bottom-width: 20px;
+  border-bottom-style: solid;
+  border-bottom-color: transparent;
+  border-left-width: 20px;
+  border-left-style: solid;
+  border-left-color: #ff9ccd;
+  top: 0px;
+  left: 100px;
+}*/

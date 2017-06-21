@@ -1,0 +1,83 @@
+<!--
+Create tabs with an icon and label, using the tabs-positive style.
+Each tab's child <ion-nav-view> directive will have its own
+navigation history that also transitions its views in and out.
+-->
+<ion-view>
+    <ion-header-bar class="my-bar">
+        <div class="logo">
+            <img src="img/logo.png">
+        </div>
+        <h3 class="title"></h3>
+        <div class="buttons">
+            <button class="button button-clear button-dark icon-profile button-home" ng-show="checkLog" ng-click="checkProfile()"></button>
+            <button class="button button-clear button-dark icon-login1 button-home" ui-sref="app.login" ng-show="!checkLog"></button>
+            <button class="button button-clear button-dark icon-logout button-home" ng-show="checkLog" ng-click="logOut()"></button>
+            <!--             <button class="button button-clear button-dark icon-search button-home" ui-sref="app.search"></button>
+ -->
+        </div>
+        <!--  <div class="search-home relative" ng-if="checkBar>=2" ui-sref="app.search">
+            <p>Search</p>
+            <i class="icon-search absolute pink"></i>
+        </div> -->
+    </ion-header-bar>
+    <ion-tabs class="my-tab" delegate-handle="my-tabs">
+        <!-- latest Tab -->
+        <ion-tab title="{{'latest' | translate}}" on-select="getIndexTab()">
+            <ion-panel>
+                <ion-content class="padding" ng-controller="postCtrl">
+                <ion-refresher pulling-icon="ion-refresh" on-refresh="doRefresh()"></ion-refresher>
+                    <div  ng-include="'templates/tab/tab-home.html'" ></div>
+                </ion-content>
+            </ion-panel>
+        </ion-tab>
+        <!-- feature Tab -->
+        <ion-tab title="{{'feature' | translate}}" on-select="getIndexTab()">
+            <ion-panel>
+                <ion-content class="padding" ng-controller="featureCtrl">
+                <ion-refresher pulling-icon="ion-refresh" on-refresh="doRefresh()"></ion-refresher>
+                    <div  ng-include="'templates/tab/tab-feature.html'" ></div>
+                </ion-content>
+            </ion-panel>
+        </ion-tab>
+        <!-- photo Tab -->
+        <ion-tab title="{{'photos' | translate}}" on-select="getIndexTab()">
+             <ion-panel>
+                <ion-content class="padding" ng-controller="photoCtrl">
+                <ion-refresher pulling-icon="ion-refresh" on-refresh="doRefresh()"></ion-refresher>
+                    <div  ng-include="'templates/tab/tab-photo.html'" ></div>
+                </ion-content>
+            </ion-panel>
+        </ion-tab>
+        <ion-tab title="{{'video' | translate}}" on-select="getIndexTab()">
+            <ion-panel>
+                <ion-content class="padding" ng-controller="videoCtrl">
+                <ion-refresher pulling-icon="ion-refresh" on-refresh="doRefresh()"></ion-refresher>
+                    <div  ng-include="'templates/tab/tab-video.html'" ></div>
+                </ion-content>
+            </ion-panel>
+        </ion-tab>
+        <!-- video Tab -->
+    </ion-tabs>
+   <!--  <ion-footer-bar class="my-footer">
+        <div class="col-19" ui-sref="app.tabs">
+            <i class="icon-home"></i>
+            <span>Home</span>
+        </div>
+        <div class="col-19 margin-l10" ui-sref="app.category">
+            <i class="icon-category"></i>
+            <span>Category</span>
+        </div>
+        <div class="col-19 margin-l10" ui-sref="app.search">
+            <i class="icon-search"></i>
+            <span>Search</span>
+        </div>
+        <div class="col-19 margin-l10" ui-sref="app.bookmark">
+            <i class="icon-bookmarks"></i>
+            <span>BookMarks</span>
+        </div>
+        <div class="col-19 margin-l10" menu-toggle="left">
+            <i class="icon-setting"></i>
+            <span>Setting</span>
+    </ion-footer-bar> -->
+</ion-view>

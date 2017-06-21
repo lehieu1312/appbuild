@@ -1,0 +1,17 @@
+#recent{
+	border-bottom: 1px solid #ee2fa2;
+}
+
+.search-delete{
+	right: 0px;
+	bottom: 2px;
+}
+.bar-search form{
+	width: 90%;
+}
+.bar-search input{
+	width: 85%;
+}
+.button-search{
+	right: 10px;
+}

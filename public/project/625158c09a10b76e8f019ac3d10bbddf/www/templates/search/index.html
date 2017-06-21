@@ -1,0 +1,53 @@
+<ion-view>
+    <link rel="stylesheet" type="text/css" href="css/search.css">
+    <ion-header-bar class="bar-pink bar-search">
+        <button class="button button-clear button-light icon-back" ng-click="comeBack()"></button>
+        <form class="" ng-submit="search()">
+        <input type="text" name="" ng-model="s.dataSearch" ng-click="c=true">
+        </form>
+        <button class="button button-clear button-light icon-search absolute button-search" ng-click="search()"></button>
+<!--         <button class="button button-clear button-light icon-search"></button>
+ -->    </ion-header-bar>
+    <ion-content class="search padding">
+        <!-- recent-search -->
+        <ul ng-hide="s.dataSearch||data1.length==0">
+            <li class="padding-10 margin-t10 relative" id="recent"><span>{{'searchRecent'|translate}}</span>
+                <button class="button button-clear button-dark icon-delete absolute search-delete" ng-click="delete();c=false"></button>
+            </li>
+            <li class="margin-t10 padding-l5" ng-repeat="y in data1" ng-if="data1.length>0">
+                <a ng-href="#app/details/{{y.id}}" ng-bind-html="y.name" ng-if="y.format=='video'||y.format=='standard'"></a>
+            	<a ng-href="#app/slidebox/{{y.id}}" ng-bind-html="y.name" ng-if="y.format=='gallery'||y.format=='image'"></a>
+            </li>
+        </ul>
+        <!-- result-search -->
+          <div class="post-thumnail over-flow margin-t10 border-b" ng-repeat="x in data" ng-click="save(x.id,x.title.rendered,x.format)">
+                <div class="thumbnail float-l col-41 relative over-flow" >
+                    <a ng-href="#app/details/{{x.id}}" ng-if="x.format=='standard'||x.format=='video'">
+                        <img ng-src={{x.mobiconnector_feature_image.mobiconnector_large||'img/no_images.png'}}></a>
+                    <a ng-href="#app/slidebox/{{x.id}}" ng-if="x.format=='image'||x.format=='gallery'">
+                        <img ng-src={{x.mobiconnector_feature_image.mobiconnector_large||'img/no_images.png'}}></a>
+                    <div class="play absolute" ng-if="x.format=='image'|| x.format=='gallery'"><i class="icon-gallery1 absolute"></i></div>
+                    <div class="absolute play" ng-if="x.format=='video'"><i class="icon-play absolute"></i></div>
+                </div>
+              
+                <div class="title-thumbnail float-l col-61 padding-thumbnail">
+                    <a ng-href="#app/details/{{x.id}}" ng-if="x.format=='standard'||x.format=='video'">
+                        <p ng-bind-html="x.title.rendered"> </p>
+                    </a>
+                    <a ng-href="#app/slidebox/{{x.id}}" ng-if="x.format=='image'||x.format=='gallery'">
+                        <p ng-bind-html="x.title.rendered"> </p>
+                    </a>
+                    <p class="info-post padding-t10 gray"><span class="padding-r10">{{x.mobiconnector_total_comments.all}}<i class="icon-comment"></i></span><span>{{x.mobiconnector_total_views}}<i class="icon-eyes"></i></span></p>
+                </div>
+            </div>
+        <div class="no-result" style="margin-top: 50%" ng-show="!noResult && data.length==0">
+            <p class="align-center">{{'noresult'|translate}}</p>
+        </div>  
+         <div class="no-result" style="margin-top: 50%" ng-show="require">
+        	<p class="align-center">{{'keywordIsRequired'|translate}}</p>
+        </div>
+             <ion-infinite-scroll ng-if="!over&&data.length>0" on-infinite="loadMore()">
+    </ion-infinite-scroll>
+   
+    </ion-content>
+</ion-view>

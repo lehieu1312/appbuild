@@ -1,0 +1,28 @@
+<div class="photo over-flow white-d" ng-if="dataImage.length>0">
+			<!-- <div class="head-photo">
+            <h4 class="padding-10 pink">Photo<i class="icon-camera padding-l5"></i></h4>
+        </div> -->
+       <div class="photo-item" ng-class="{toppost:$first}" ng-repeat="x in dataImage">
+            <div class="post-thumnail over-flow margin-t10 border-b" >
+                <div class="thumbnail float-l col-41 relative">
+                    <a ng-href="#app/slidebox/{{x.id}}"><img ng-src={{x.mobiconnector_feature_image.mobiconnector_large||'img/no_images.png'}}></a>
+                    <div class="play2 absolute" ng-if="$first"><i class="icon-gallery absolute"></i></div>
+                    <div class="play absolute" ng-if="!$first"><i class="icon-gallery1 absolute"></i></div>
+                </div>
+               <!--  <div class="thumbnail float-l col-41 relative" ng-if="x.mobiconnector_feature_image==null">
+                    <a ng-href="#app/slidebox/{{x.id}}"><img src="img/no_images.png"></a>
+                    <div class="play2 absolute"></div>
+                </div> -->
+                <div class="title-thumbnail float-l col-61 padding-thumbnail">
+                    <a ng-href="#app/slidebox/{{x.id}}">
+                        <p ng-bind-html="x.title.rendered">
+                        </p>
+                    </a>
+                    <p class="info-post padding-t10 gray"><span class="padding-r10">{{x.mobiconnector_total_comments.all}}<i class="icon-comment"></i></span><span>{{x.mobiconnector_total_views}}<i class="icon-eyes"></i></span></p>
+                </div>
+            </div>
+        </div>
+          <div class="see-more" ng-click="loadMore()" ng-show="checkMore">
+            <p>{{'seeMore'|translate}}</p>
+        </div>
+    </div>
