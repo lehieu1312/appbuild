@@ -6,6 +6,11 @@ var hbs = require('nodemailer-express-handlebars');
 var router = express.Router();
 var qr = require('qr-image');
 var QRCode = require('qrcode');
+var bodyParser = require('body-parser');
+var appRoot = require('app-root-path');
+var xml2js = require('xml2js');
+var parser = new xml2js.Parser();
+
 /* GET users listing. */
 router.get('/test', function(req, res, next) {
     var hostName = req.headers.host;
@@ -27,7 +32,6 @@ router.get('/qr', function(req, res) {
             quality: 0.5
         }
     }
-
     QRCode.toDataURL('localhost:3005\static\debug\9f3fec4d9fcaeec15238174e88dd6ac4\zingapp-debug.apk', opts, function(err, url) {
         if (err) throw err
         console.log(url)
@@ -35,6 +39,18 @@ router.get('/qr', function(req, res) {
             //img.src = url;
         res.render('success', { qrcode: url });
     })
+})
+router.post('/getajax', function(req, res) {
+    var name = req.body.number;
+    var rule = req.body.rule;
+    console.log('rule: ' + rule);
+    console.log(name);
+    setTimeout(function() { res.send('success'); }, 3000);
+
+    //res.sendFile('/');
+})
+router.get('/getajax', function(req, res) {
+    res.render('ajaxxample');
 })
 router.get('/send', function(req, res, next) {
     var transporter = nodemailer.createTransport({ // config mail server
@@ -97,6 +113,7 @@ router.get('/sendmail', function(req, res) {
     });
     res.render('success');
 });
+
 router.get('/getlink', function(req, res, next) {
     var hostName = req.headers.host;
     console.log('host: ' + hostName);
@@ -106,5 +123,50 @@ router.get('/getlink', function(req, res, next) {
     console.log(linksinged);
     res.render('success');
 });
+router.get('/filexml', function(req, res) {
+    var xml = path.join(appRoot.toString(), 'config.xml');
+    console.log(xml);
+    if (fs.existsSync(xml)) {
+        fs.readFile(xml, 'utf8', function(err, data) {
+            if (err) {
+                console.log(err.message);
+                return;
 
+            } else {
+                parser.parseString(data, function(err, result) {
+                    console.log(result);
+                    console.log(result.widget.name[0]);
+                    res.render('index');
+                });
+            }
+        });
+    } else {
+        console.log('not found');
+        res.render('index');
+    }
+});
+router.get('/getxml', function(req, res) {
+    var xml = path.join(appRoot.toString(), 'params.xml');
+    console.log(xml);
+    if (fs.existsSync(xml)) {
+        fs.readFile(xml, 'utf8', function(err, data) {
+            if (err) {
+                console.log(err.message);
+                return;
+
+            } else {
+                parser.parseString(data, function(err, result) {
+                    var arrFile = result['root']['file'];
+                    res.render('info-app', { arrFile });
+                });
+            }
+        });
+    } else {
+        console.log('not found');
+        res.render('index');
+    }
+});
+// router.post('/info-app', function(req, res) {
+//     res.render('index');
+// })
 module.exports = router;

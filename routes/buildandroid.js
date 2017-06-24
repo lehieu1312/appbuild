@@ -191,6 +191,7 @@ router.post('/build-android', multipartMiddleware, function(req, res, next) {
             let zipAlignApp = (pathProjectApp, App) => {
 
                 var deferred = Q.defer();
+                console.log(path.join(pathProjectApp, 'outputs', 'signed', 'android-release-unsigned.apk'));
                 const zipalign = spawn('zipalign ', ['-f', '-v', '4', path.join(pathProjectApp, 'outputs', 'signed', 'android-release-unsigned.apk'), path.join(pathProjectApp, 'outputs', 'signed', App + '.apk')], { stdio: 'inherit', shell: true, silent: true });
 
                 zipalign.on('data', function(data) {
@@ -338,16 +339,16 @@ router.post('/build-android', multipartMiddleware, function(req, res, next) {
                     var linksigned = path.join(hostName, 'static', 'signed', sess.folderAppMd5, sess.appName + '.apk');
                     sess.linkdebug = linkdebug;
                     sess.linksigned = linksigned;
-                    return sendMail('hieu.ric@gmail.com', linkdebug, linksigned, sess.appName)
+                    return sendMail(mailCustomer, linkdebug, linksigned, sess.appName)
                 })
                 .then(function() {
                     // let customer = new Customer();
                     // customer.email = mailCustomer;
-                    // customer.appname.app = sess.appName;
-                    // customer.appname.plaforms = 'android';
-                    // customer.appname.linkdebug = sess.linkdebug;
-                    // customer.appname.linksigned = sess.linksigned;
-                    // customer.appname.datecreate = Date.now();
+                    // customer.info.app = sess.appName;
+                    // customer.info.plaforms = 'android';
+                    // customer.info.linkdebug = sess.linkdebug;
+                    // customer.info.linksigned = sess.linksigned;
+                    // customer.info.datecreate = Date.now();
                     // customer.save(function(err) {
                     //     if (err) {
                     //         console.log(err);
@@ -363,10 +364,11 @@ router.post('/build-android', multipartMiddleware, function(req, res, next) {
                             quality: 0.5
                         }
                     }
-                    QRCode.toDataURL(sess.linkdebug, opts, function(err, url) {
+                    QRCode.toDataURL(sess.linkdebug, opts, function(err, qrcodeurl) {
                             if (err) throw err
                             checked = true;
-                            return res.render('success', { qrcode: url });
+                            sess.qrcode = qrcodeurl
+                            return res.send(sess.qrcode);
                         })
                         // return res.render('success');
                 })
@@ -374,7 +376,8 @@ router.post('/build-android', multipartMiddleware, function(req, res, next) {
                     if (ex instanceof Error) {
                         checked = true;
                         //  if (fs.existsSync(path.join(appRoot, 'public', 'project', sess.folderAppMd5))) fs.unlink(path.join(appRoot, 'public', 'project', sess.folderAppMd5))
-                        res.render('upload', { errors: 'Error build(' + ex + '' + '),please try again.' });
+                        // res.render('upload', { errors: 'Error build(' + ex + '' + '),please try again.' });
+                        res.send(ex);
                     }
                 });
         }

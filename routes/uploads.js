@@ -20,7 +20,7 @@ router.post('/upload', multipartMiddleware, function(req, res, next) {
     try {
         sess = req.session;
         var file = req.files.file_upload;
-        sess.appName = req.body.appname;
+        //sess.appName = req.body.appname;
         console.log('app Name: ' + sess.appName);
         var appExtFile = file.name.split('.').pop();
         console.log('ext file: ' + appExtFile);
@@ -60,7 +60,7 @@ router.post('/upload', multipartMiddleware, function(req, res, next) {
                                             }
                                         });
                                     } else {
-                                        console.log('not found params');
+                                        console.log('File params not found');
                                         //  res.send('not found params');
                                         // fse.removeSync(path.join(path_Temporary, app_Name));
                                         // fs.unlinkSync(path.join(path_FileUploads));
@@ -80,7 +80,7 @@ router.post('/upload', multipartMiddleware, function(req, res, next) {
             res.render('upload', { errors: errors });
             next();
         }
-    } catch (ex) { res.render('upload', { errors: ex }); }
+    } catch (ex) { res.render('upload', { errors: ex + '' }); }
 });
 
 

@@ -1,8 +1,42 @@
 <% include header%>
-    <script>
+    <script language="javascript">
+        function send_ajax() {
+            var obj = {};
+            $('#loading').show();
+            //alert('le an');
+            // $(".spinner").fadeIn();
+            $.ajax({
+                url: "/build-android",
+                type: "post",
+                dataType: "text",
+                data: {
+                    email: $('#email').val(),
+                    keystore: $('#keystore').val(),
+                    confirmkeystore: $('#confirmkeystore').val(),
+                    CN: $('#CN').val(),
+                    OU: $('#OU').val(),
+                    O: $('#O').val(),
+                    L: $('#L').val(),
+                    ST: $('#ST').val(),
+                    C: $('#C').val(),
+                    alias: $('#alias').val(),
+                },
+                success: function(result) {
+                    // alert(result);
+                    location.href = "/success"
+                },
+                error: function(jqXHR, textStatus, err) {
+                    //show error message
+                    alert(' Error build: ' + err + ' Views application again,please!')
+                    location.href = "/upload"
+                }
+            }).always(function() {
+                $('#loading').hide();
+            });
+        }
     </script>
 
-    <div id="loading"></div>
+    <div id="loading" style="display:none"></div>
     <div class="container">
         <div class="row">
             <div class="col-md-12">
@@ -33,50 +67,50 @@
                                     <div class="tab-pane fade in active" id="tab1warning">
                                         <h1>Build application android</h1>
 
-                                        <form class="form form-horizontal" id="submitandroid" action="/build-android" method="POST">
+                                        <form class="form form-horizontal" method="POST">
                                             <div class="form-group">
                                                 <label class="col-sm-2 control-label"> Email </label>
-                                                <div class="col-sm-6"><input class="form-control" type="text" name="email" value="lehieu.ggplay@gmail.com" /></div>
+                                                <div class="col-sm-6"><input class="form-control" type="text" id="email" name="email" value="hieu.ric@gmail.com" /></div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-2 control-label"> Key store </label>
-                                                <div class="col-sm-6"><input class="form-control" type="password" name="keystore" value="taydotech" /></div>
+                                                <div class="col-sm-6"><input class="form-control" type="password" id="keystore" name="keystore" value="taydotech" /></div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-2 control-label">Confirm key store  </label>
-                                                <div class="col-sm-6"><input class="form-control" type="password" name="confirmkeystore" value="taydotech" /></div>
+                                                <div class="col-sm-6"><input class="form-control" type="password" id="confirmkeystore" name="confirmkeystore" value="taydotech" /></div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-2 control-label">  First and last name </label>
-                                                <div class="col-sm-6"><input class="form-control" type="text" name="CN" value="Taydo Tech" /></div>
+                                                <div class="col-sm-6"><input class="form-control" type="text" id="CN" name="CN" value="Taydo Tech" /></div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-2 control-label">  Organizational unit </label>
-                                                <div class="col-sm-6"><input class="form-control" type="text" name="OU" value="TaydoTech" /></div>
+                                                <div class="col-sm-6"><input class="form-control" type="text" id="OU" name="OU" value="TaydoTech" /></div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-2 control-label">  Organizational </label>
-                                                <div class="col-sm-6"><input class="form-control" type="text" name="O" value="TaydoTech" /></div>
+                                                <div class="col-sm-6"><input class="form-control" type="text" id="O" name="O" value="TaydoTech" /></div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-2 control-label"> City or location </label>
-                                                <div class="col-sm-6"><input class="form-control" type="text" name="L" value="Hanoi" /></div>
+                                                <div class="col-sm-6"><input class="form-control" type="text" id="L" name="L" value="Hanoi" /></div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-2 control-label"> State or Province </label>
-                                                <div class="col-sm-6"><input class="form-control" type="text" name="ST" value="Vietnam" /></div>
+                                                <div class="col-sm-6"><input class="form-control" type="text" id="ST" name="ST" value="Vietnam" /></div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-2 control-label"> Two-letter country </label>
-                                                <div class="col-sm-6"><input type="text" class="form-control" name="C" value="VN" /></div>
+                                                <div class="col-sm-6"><input type="text" class="form-control" id="C" name="C" value="VN" /></div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="col-sm-2 control-label"> alias name </label>
-                                                <div class="col-sm-6"><input type="text" class="form-control" name="alias" value="TaydoTech" /></div>
+                                                <div class="col-sm-6"><input type="text" class="form-control" id="alias" name="alias" value="TaydoTech" /></div>
                                             </div>
                                             <div class="form-group">
                                                 <div class="col-sm-6 col-sm-offset-2">
-                                                    <input type="submit" value="Build android" class="btn btn-primary">
+                                                    <input type="button" onclick="send_ajax()" value="Build android" class="btn btn-primary">
                                                 </div>
                                             </div>
                                         </form>
@@ -100,7 +134,7 @@
 
                                             <div class="form-group">
                                                 <div class="col-sm-6 col-sm-offset-2">
-                                                    <input type="submit" value="Build ios" class="btn btn-primary">
+                                                    <input type="button" value="Build ios" onclick="send_ajax()" class="btn btn-primary">
                                                 </div>
                                             </div>
                                         </form>

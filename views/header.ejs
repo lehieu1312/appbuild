@@ -15,7 +15,7 @@
     <script type="text/javascript" charset="utf-8" src="/themes/js/loading.js"></script>
     <script src='//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js'></script>
     <style>
-        .spinner {
+        /*.spinner {
             background: #282429 url(/themes/img/loading.gif) no-repeat center center;
             z-index: 99999;
             position: fixed;
@@ -23,40 +23,42 @@
             top: 0;
             height: 100%;
             -webkit-user-select: none
-        }
+        }*/
         
         #loading {
-            z-index: 500;
+            z-index: 99999;
+            background: #282429 url(/themes/img/loading.gif) no-repeat center center;
             opacity: 0.7;
-            background-color: #999;
+            position: fixed;
+            /*background-color: #999;*/
+            top: 0;
             width: 100%;
             height: 100%;
         }
     </style>
-    <div class='spinner' id="loading"></div>
-    <script type='text/javascript'>
-        $(window).load(function() {
-            setTimeout(function() {
-                $(".spinner").fadeOut("slow");
-                setTimeout(function() {
-                    $("#loader").fadeOut("low")
-                }, 0)
-            }, 0)
-        })
-        $('#submitandroid').submit(function() {
-            setTimeout(function() {
-                $(".spinner").fadeOut("slow");
-                setTimeout(function() {
-                    $("#loader").fadeOut("low")
-                }, 0)
-            }, 10000)
 
-        });
+    <script type='text/javascript'>
+        // $(window).load(function() {
+        //         $("#loading").show();
+        //         setTimeout(function() {
+        //             $("#loading").hide();
+        //         }, 1000)
+        //     })
+        // $('#submitandroid').submit(function() {
+        //     setTimeout(function() {
+        //         $(".spinner").fadeOut("slow");
+        //         setTimeout(function() {
+        //             $("#loader").fadeOut("low")
+        //         }, 0)
+        //     }, 10000)
+
+        // });
     </script>
 
 </head>
 
 <body id="body">
+    <div id="loading" style="display:none"></div>
     <div>
         <div class="nav">
             <nav class="navbar navbar-default" rol="navigation">
@@ -66,7 +68,7 @@
                             <li><a href="/">Home</a></li>
                             <li><a href="/upload">Upload App</a></li>
                             <li><a href="/infobuild">build info </a></li>
-                            <li><a href="/test">test </a></li>
+                            <li><a href="/getxml">test </a></li>
                             <!--<li><a href="/buildtest">Build test </a></li>
                             <li><a href="/unzip">unzip </a></li>
                             <li><a href="/gethooks">get hooks </a></li>

@@ -2,7 +2,7 @@ let mongoose = require('mongoose');
 
 let customerChema = mongoose.Schema({
     email: { type: String, require: true },
-    appname: [{
+    info: [{
         app: { type: String, require: true },
         platforms: { type: String, require: true },
         linkdebug: { type: String, require: true },

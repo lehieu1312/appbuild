@@ -1,35 +1,172 @@
 <% include header%>
     <script>
+        function validateEmail(email) {
+            var str = /^[a-z][a-zA-Z0-9_.]*(\.[a-zA-Z][a-zA-Z0-9_.]*)?@[a-z][a-zA-Z-0-9]*\.[a-z]+(\.[a-z]+)?$/;
+            return str.test(email);
+        }
+
+        function validateIdentifier(str) {
+            var id = /^[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12}$/;
+            return id.test(str);
+        }
+
+        function isNumber(strnumber) {
+            var numberic = /^[0-9]*$/;
+            return numberic.test(strnumber);
+        }
+
+        function checkDateFormat(strDate) {
+            var cDate = strDate.split('-');
+            if (cdate.lenght <= 1) {
+                cdate = strDate.split('/');
+            }
+            if (cDate.lenght < 3 || cDate.lenght > 3) return false;
+            else if (cdate[0] != 'dd' && cdate[0] != 'MM' && cdate[0] != 'yyyy' && cdate[0] != 'yy') return false;
+            else if (cdate[1] != 'dd' && cdate[1] != 'MM' && cdate[1] != 'yyyy' && cdate[1] != 'yy') return false;
+            else if (cdate[2] != 'dd' && cdate[2] != 'MM' && cdate[2] != 'yyyy' && cdate[2] != 'yy') return false;
+            else return true;
+        }
+
+        function ValidURL(str) {
+            var pattern = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
+            if (!pattern.test(str)) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+
+        function checkWpUrl(strUrl) {
+            var checkURL;
+            if (ValidURL(strUrl)) {
+                $.ajax({
+                    url: strUrl + '/wp-json/wp/v2/categories',
+                    type: "get",
+                    dataType: "text",
+                    data: {},
+                    async: false,
+                    success: function(msg) {
+                        checkURL = true;
+                    },
+                    error: function(jqXHR, textStatus, err) {
+                        checkURL = false;
+                    }
+                })
+                return checkURL;
+            } else return false;
+        }
+
+        function validateForm() {
+            $("input").each(function() {
+                var rules = $(this).attr("rules");
+                //  alert('rules: ' + rules);
+                if (rules.toLowerCase() == "packageid") {
+
+                    var value = $(this).val();
+
+                    var oPackage = value.indexOf('.')
+                    var sPackage = value.indexOf(' ')
+                    if (oPackage == -1 || sPackage != -1) {
+                        alert('Package is not match (com.domain.id) ');
+                        $(this).focus();
+                        return false;
+                    } else {
+                        var cPackage = value.split('.');
+                        var regex = /\d$/;
+                        if (isNumber(cPackage.shift()) == true) {
+                            alert('Package is not match (com.domain.id) ');
+                            $(this).focus();
+                            return false;
+                        }
+                    }
+
+                    // if (cPackage.lenght() < 2 || typeof cPackage.lenght() == 'undefined') {
+                    //     alert('Package is not match (com.domain.id) ');
+                    //     $(this).focus();
+                    //     return false;
+                    // }
+                }
+                if (rules.toLowerCase() == "email") {
+                    var checkmail = validateEmail($(this).val());
+                    //alert('mail: ' + checkmail);
+                    if (checkmail == false) {
+                        alert('Please enter correct email');
+                        $(this).focus();
+                        return false;
+                    }
+
+                }
+                if (rules.toLowerCase() == "number") {
+                    var val = $(this).val();
+                    var checkNumber = isNumber($(this).val());
+                    if (checkNumber == false) {
+                        alert(val + ' Not is number.');
+                        $(this).focus();
+                        return false;
+                    }
+
+                }
+
+                if (rules.toLowerCase() == "dateformat") {
+                    var val = $(this).val();
+                    if (checkDateFormat(val) == false) {
+                        alert('Date format not match.');
+                        $(this).focus();
+                        return false;
+                    }
+                }
+                if (rules.toLowerCase() == "onesignalid") {
+                    if (validateIdentifier($(this).val()) == false) {
+                        alert('OnesignalID not match format');
+                        $(this).focus();
+                        return false;
+                    }
+
+                }
+                if (rules.toLowerCase() == "wordpressurl") {
+                    var val = $(this).val();
+                    // alert('ck url: ' + checkWpUrl(val));
+                    if (checkWpUrl(val) == false) {
+                        alert('Wordpress url not match.');
+                        $(this).focus();
+                        return false;
+                    }
+                }
+            });
+            return false;
+        }
     </script>
     <div class="panel">
         <div class="panel-heading">
             <h3>Setting application</h3>
         </div>
         <div class="panel-body">
-            <form class="form form-horizontal" id="settingapp" action="/info-app" method="POST">
+            <form class="form form-horizontal" id="settingapp" action="/info-app" method="POST" onsubmit="return(validateForm())">
                 <%var i=0,j=0; %>
                     <%for(i=0;i<arrFile.length;i++){%>
-                        <div class="info-file">
+                        <div class=" info-file ">
                             <h4>
                                 <%=arrFile[i]['$'].path %>
                             </h4>
                             <%for(j=0;j<arrFile[i].field.length;j++){
                                 var path=arrFile[i]['$'].path;
                                 %>
-
-                                <div class="form-group">
-                                    <label class="col-sm-2 control-label"><%=arrFile[i]['field'][j]['$'].label %> </label>
+                                <div class="form-group ">
+                                    <label class="col-sm-2 control-label "><%=arrFile[i]['field'][j]['$'].label %> </label>
                                     <% if(arrFile[i]['field'][j]['$'].type=='string'){%>
-                                        <div class="col-sm-6"><input class="form-control" required="<%=arrFile[i]['field'][j]['$'].required %>" type="text" name="<%=path+'='+arrFile[i]['field'][j]['$'].name %>" value="a" /></div>
+                                        <div class="col-sm-6 "><input class="form-control " required="<%=arrFile[i][ 'field'][j][ '$'].required %>" type="text" name="<%=path+'='+arrFile[i]['field'][j]['$'].name %>" value="a" rules="<%=arrFile[i][ 'field'][j][ '$'].rules %>"
+                                            /></div>
                                         <%}else  if(arrFile[i]['field'][j]['$'].type=='boolean'){%>
                                             <label class="radio-inline">
-                                                <input type="radio" name="<%=path+'='+arrFile[i]['field'][j]['$'].name %>"  value="true" checked> true
+                                                <input type="radio" name="<%=path+'='+arrFile[i]['field'][j]['$'].name %>"  value="true" checked rules="<%=arrFile[i][ 'field'][j][ '$'].rules %>" /> true
                                             </label>
                                             <label class="radio-inline">
-                                                <input type="radio" name="<%=path+'='+arrFile[i]['field'][j]['$'].name %>"  value="false"> false
+                                                <input type="radio" name="<%=path+'='+arrFile[i]['field'][j]['$'].name %>"  value="false" rules="<%=arrFile[i][ 'field'][j][ '$'].rules %>" /> false
                                             </label>
                                             <%}else{%>
-                                                <div class="col-sm-6"><input class="form-control" required="<%=arrFile[i]['field'][j]['$'].required %>" type="<%=arrFile[i]['field'][j]['$'].type %>" name="<%=path+'='+arrFile[i]['field'][j]['$'].name %>" value="1" /></div>
+                                                <div class="col-sm-6"><input class="form-control" required="<%=arrFile[i]['field'][j]['$'].required %>" type="<%=arrFile[i]['field'][j]['$'].type %>" name="<%=path+'='+arrFile[i]['field'][j]['$'].name %>" value="1" rules="<%=arrFile[i][ 'field'][j][ '$'].rules %>"
+                                                    /></div>
                                                 <%}%>
                                 </div>
                                 <%}%>
